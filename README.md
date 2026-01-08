@@ -272,8 +272,4 @@ Active development and refinement.
 ---
 
 ## Author
-
-Self-built and maintained as a learning-focused systems engineering project.
-```
-
----
+Arjun Rajesh
