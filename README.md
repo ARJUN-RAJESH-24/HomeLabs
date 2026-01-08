@@ -1,11 +1,3 @@
-Here’s a **clean, formal, professional `README.md`** you can directly put on GitHub.
-It’s written the way **infra / systems / DevOps engineers** document things — not flashy, not cringe, not student-ish.
-
-You can copy-paste this as-is.
-
----
-
-```md
 # HomeLabs
 
 ## Overview
