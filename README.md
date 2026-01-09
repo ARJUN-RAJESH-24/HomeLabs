@@ -3,16 +3,22 @@
 ## Overview
 
 This repository documents the design, setup, and operation of a **self-hosted home lab** built using refurbished consumer laptops.  
-The goal of this project is to design an **offline-capable, secure, family-oriented backup and media server infrastructure** with remote access, redundancy, and power-aware operation.
+The objective is to design an **offline-capable, secure, family-oriented backup and media server infrastructure** with redundancy, remote access, and power-aware operation.
 
-This home lab is designed under **real-world constraints**:
-- Limited hardware
-- No always-on internet
-- No cloud storage dependency
-- Remote access from long distances
-- Power and availability limitations
+The project is built under **real-world constraints** such as limited hardware, intermittent internet access, and power availability, with a strong focus on **systems engineering and reliability** rather than idealized cloud-native setups.
 
-The project emphasizes **systems thinking, Linux administration, networking, storage, and reliability engineering**.
+---
+
+## Goals
+
+- Eliminate dependency on cloud storage services (e.g., Google Photos limits)
+- Provide a **centralized family backup solution** for photos and files
+- Enable **local media streaming** within the home network
+- Allow **secure remote access** from long distances (300–500 km)
+- Design a system that does **not require 24/7 uptime**
+- Build redundancy using multiple low-cost machines
+- Gain hands-on experience in Linux systems, networking, and storage
+- Document the system as a reproducible, real-world project
 
 ---
 
@@ -22,54 +28,54 @@ The project emphasizes **systems thinking, Linux administration, networking, sto
 
 - **Acer Predator Helios Neo 16**  
   *Role:* Main client / daily driver  
-  *Usage:* Development, administration, SSH access, monitoring
+  *Usage:* Development, SSH administration, monitoring
 
 - **DELL Inspiron 5521**  
   *Role:* Secondary client  
-  *Usage:* Auxiliary access, testing, fallback client
+  *Usage:* Auxiliary access, fallback administration
 
 ---
 
 ### Server Machines
 
 - **Lenovo ThinkPad E530c** *(Primary Server)*  
-  *Specifications:*
+  **Specifications**
   - Intel i5 3rd Gen (M series)
   - 12 GB RAM
   - 128 GB SSD (OS)
   - 512 GB HDD (Data)
-  - Ethernet (Wake-on-LAN supported)
+  - Ethernet with Wake-on-LAN support
 
-  *Role:*
+  **Responsibilities**
   - Primary home server
   - Family backup hub
   - Media server
-  - Remote access gateway
-  - On-demand availability using Wake-on-LAN
+  - Secure remote access gateway
+  - On-demand availability via Wake-on-LAN
 
 - **DELL Inspiron N4030** *(Secondary / Backup Server)*  
-  *Specifications:*
+  **Specifications**
   - 4 GB RAM
   - 160 GB HDD
   - Ethernet
   - Headless operation
 
-  *Role:*
+  **Responsibilities**
   - Backup mirror
-  - Redundancy node
-  - Utility and recovery server
+  - Redundancy and recovery node
+  - Utility server
 
 ---
 
 ## Operating System Strategy
 
-- **Linux Mint (Ubuntu LTS base)** on the primary server
-- Desktop Environment completely removed
+- Linux Mint (Ubuntu LTS base)
+- Desktop Environment fully removed
 - Headless, SSH-only operation
 - Liquorix kernel used temporarily during testing
-- Planned migration to generic LTS kernel for long-term stability
+- Planned transition to generic LTS kernel for long-term stability
 
-No graphical environment is used on server machines.
+The choice prioritizes **stability, predictability, and low overhead** over performance tuning.
 
 ---
 
@@ -77,17 +83,15 @@ No graphical environment is used on server machines.
 
 ### Primary Server (ThinkPad E530c)
 
-- **SSD (128 GB)**  
+- **128 GB SSD**  
   - Operating system only
 
-- **HDD (512 GB)** mounted at:
+- **512 GB HDD** mounted at:
 ```
 
 /srv/data
 
 ```
-
-Directory structure:
 ```
 
 /srv/data/
@@ -103,144 +107,169 @@ Directory structure:
 
 ### Secondary Server (N4030)
 
-- **HDD (160 GB)** mounted at:
+- **160 GB HDD** mounted at:
 ```
 
 /srv/backup
 
 ```
 
-- Used as an `rsync` mirror for redundancy
+- Used as an rsync-based mirror of critical data
 
 ---
 
 ## Networking Design
 
-### Local Network (No Internet)
+### Local Network (Offline Mode)
 
-- Wi-Fi router operates without ISP connectivity
-- All devices connect to the same LAN
-- Services available locally:
+- Wi-Fi router functions without ISP connectivity
+- Devices connect over LAN only
+- Fully functional local services:
 - File sharing (Samba)
 - Media streaming (Jellyfin)
-- Device-to-device transfers
+- Device-to-device file transfer
 
-Internet access is **not required** for core functionality.
+No internet access is required for core functionality.
 
 ---
 
-### Remote Access (Internet Available)
+### Remote Access (Online Mode)
 
-- Secure remote access via **Tailscale**
+- Secure access via **Tailscale**
 - No port forwarding
 - No public exposure
-- Access from long distances (300–500 km)
+- NAT-agnostic connectivity
 
 ---
 
 ## Power & Availability Strategy
 
-- All servers operate on AC power (dead batteries)
-- Servers are treated as appliances
-- **Wake-on-LAN** enables on-demand availability
-- No requirement for 24/7 uptime
-- Manual power control accepted for secondary server
+- Dead batteries accepted; systems operate on AC power
+- Servers treated as fixed appliances
+- Wake-on-LAN enables remote power-on
+- No requirement for continuous uptime
+- Manual power-on accepted for secondary server
 
 ---
 
-## Security Model
+## Issues Faced
 
-- SSH-based administration
-- Firewall-enabled (UFW)
-- No exposed public services
-- VPN-style access using Tailscale
-- Principle of least privilege applied
+### Hardware-Level Challenges
+- Dead batteries across all legacy machines
+- Broken display on secondary server
+- Aging thermal paste causing thermal throttling
+- Limited internal drive mounting options
+- Absence of UPS or power conditioning hardware
+
+### Software & System Challenges
+- Converting a desktop-oriented OS into a server-grade environment
+- Managing resource usage on older CPUs
+- Kernel choice trade-offs (latency vs stability)
+- Networking design without guaranteed internet
+- Ensuring reliability without cloud services
+
+---
+
+## Constraints
+
+- No dedicated server hardware
+- Limited storage capacity
+- Intermittent or absent internet connectivity
+- No always-on power guarantee
+- No enterprise networking equipment
+- Physical distance between administrator and server
+
+These constraints directly influenced architectural decisions.
+
+---
+
+## Skills Demonstrated
+
+### Hardware Skills
+- Laptop disassembly and reassembly
+- RAM upgrades
+- Thermal paste replacement
+- Fault diagnosis and recovery
+
+### Systems & Software Skills
+- Linux system administration
+- Headless server operation
+- Service hardening and optimization
+- Storage layout design
+- Backup strategy implementation
+
+### Networking & Infrastructure
+- LAN-only service design
+- Remote access using VPN-style tools
+- Wake-on-LAN configuration
+- Secure access without exposed ports
+
+---
+
+## Use Cases
+
+- Family photo and file backups
+- Local media streaming to TV and mobile devices
+- Secure remote file uploads while away from home
+- Learning and experimentation with system administration
+- Backup and disaster recovery testing
+
+---
+
+## Real-World Relevance
+
+This project mirrors challenges faced in:
+- On-premise IT environments
+- Edge computing setups
+- Small office or home office (SOHO) infrastructure
+- Environments with unreliable connectivity
+- Cost-constrained infrastructure deployments
+
+---
+
+## Scalability & Future Additions
+
+Planned or possible extensions:
+- Migration to generic LTS kernel
+- UPS integration for graceful shutdowns
+- Automated snapshot-based backups
+- Additional storage expansion
+- Service isolation using containers
+- Monitoring and alerting
+- Access control per family member
+- Integration with additional client devices
+
+The architecture allows **incremental scaling without redesign**.
 
 ---
 
 ## 10-Day Execution Program
 
 ### Day 1 – Hardware Validation
-- Verify thermals, RAM, storage
-- Confirm Wake-on-LAN functionality
-- BIOS configuration
-
 ### Day 2 – OS Hardening
-- Remove desktop environment
-- Disable sleep, lid actions
-- Enable SSH-only access
-
 ### Day 3 – Storage Setup
-- Partition and mount data disks
-- Define directory structure
-- Persistent mounts via `/etc/fstab`
-
-### Day 4 – Network Baseline
-- Local LAN testing
-- Static IP planning
-- SSH reliability checks
-
+### Day 4 – Networking Baseline
 ### Day 5 – Security Configuration
-- Firewall rules
-- SSH hardening
-- User privilege review
-
 ### Day 6 – File Sharing
-- Samba setup for family backups
-- Permission and access control
-
 ### Day 7 – Media Server
-- Jellyfin deployment
-- CPU-only direct play configuration
-- TV and device access testing
-
 ### Day 8 – Remote Access
-- Tailscale deployment
-- Secure remote login testing
-
 ### Day 9 – Backup & Redundancy
-- rsync-based backup to secondary server
-- Restore testing
-
 ### Day 10 – Documentation & Review
-- Architecture review
-- Failure scenario analysis
-- Documentation and cleanup
-
----
-
-## Domains & Skills Demonstrated
-
-- Linux System Administration
-- Networking (LAN, remote access, WoL)
-- Storage & Backup Engineering
-- Self-hosted Infrastructure
-- Reliability under constraints
-- Power-aware system design
-- Home lab and on-prem architecture
 
 ---
 
 ## Project Philosophy
 
-This project focuses on **engineering decisions under constraints**, not idealized cloud setups.  
-It prioritizes **ownership, reliability, and understanding** over convenience.
+This project prioritizes **understanding, ownership, and reliability** over convenience.  
+All decisions are made with **real constraints**, not ideal assumptions.
 
 ---
 
 ## Status
 
-- Architecture finalized
-- Hardware prepared
-- OS hardened
-- Execution in progress
+Active development and refinement.
 
 ---
 
 ## Author
-
-Self-built and maintained as a learning-focused systems project.
-```
-
----
-
+Arjun Rajesh
