@@ -15,3 +15,9 @@
 
 ## Future
 - Prometheus / node_exporter (optional)
+
+
+uptime
+df -h
+free -h
+journalctl -p 3 -n 20
