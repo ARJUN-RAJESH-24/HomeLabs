@@ -1,0 +1,194 @@
+# Day 5 — Security Hardening (No UI / DE Changes)
+
+**Date:** 2026-01-11
+**Server:** Lenovo ThinkPad E530c
+**OS:** Linux Mint (Ubuntu base)
+**Role:** Primary Home Server
+**Constraint:** Desktop environment, display, GPU, and ACPI behavior intentionally left untouched.
+
+---
+
+## Objectives
+
+* Harden remote access without breaking usability
+* Ensure unattended operation safety
+* Verify service persistence after reboot
+* Audit firewall and logs for hidden issues
+* Prepare the system for future remote-access architecture
+
+---
+
+## Work Completed
+
+### 1. SSH Hardening
+
+* Converted SSH authentication to **key-based only**
+* Disabled password authentication
+* Disabled root login
+* Verified passwordless access from all trusted clients
+
+**Verification:**
+
+```bash
+ssh arjun@thinkpad
+```
+
+Result:
+
+* Login successful without password prompt
+* Connection stable across multiple networks
+
+---
+
+### 2. Fail2ban Installation & Verification
+
+Installed intrusion protection for SSH:
+
+```bash
+sudo apt install -y fail2ban
+sudo systemctl enable --now fail2ban
+```
+
+Verified jail status:
+
+```bash
+sudo fail2ban-client status sshd
+```
+
+Result:
+
+* SSH jail active
+* No failed or banned IPs
+* Service running as expected
+
+---
+
+### 3. Firewall Audit (No Rule Changes)
+
+Reviewed current UFW configuration:
+
+```bash
+sudo ufw status verbose
+```
+
+Confirmed:
+
+* Default deny incoming, allow outgoing
+* SSH allowed
+* Samba (SMB) allowed
+* NFS restricted to trusted subnets
+* IPv4 and IPv6 rules present
+* Logging enabled (low)
+
+No firewall changes were required.
+
+---
+
+### 4. Log Integrity Check
+
+Reviewed high-priority logs for silent failures:
+
+```bash
+journalctl -p 3 -xb
+```
+
+Observed:
+
+* `thinkfan.service` failure due to missing sensor configuration (non-critical)
+* `casper-md5check.service` failure (installer leftover, non-impacting)
+* Normal kernel initialization messages (nouveau, Bluetooth, Wi-Fi)
+
+Assessment:
+
+* No recurring crash loops
+* No disk, filesystem, or network failures
+* All critical services stable
+
+---
+
+### 5. Service Persistence Verification
+
+Confirmed required services are enabled and active:
+
+```bash
+systemctl is-enabled ssh
+systemctl is-enabled smbd
+systemctl is-enabled nfs-server
+systemctl is-enabled fail2ban
+```
+
+Result:
+
+* All services enabled and persistent across reboot
+
+---
+
+### 6. Reboot Safety Test
+
+Performed controlled reboot:
+
+```bash
+sudo reboot
+```
+
+Post-reboot verification from client:
+
+```bash
+ssh arjun@thinkpad
+uptime
+df -h | grep /srv
+systemctl status ssh smbd nfs-server fail2ban
+```
+
+Result:
+
+* Server accessible without physical interaction
+* Storage mounted correctly
+* All services started automatically
+
+---
+
+## Known Non-Critical Issues (Documented)
+
+| Service         | Reason                         | Impact                             |
+| --------------- | ------------------------------ | ---------------------------------- |
+| thinkfan        | No custom sensor mapping       | None (firmware fan control active) |
+| casper-md5check | Installer leftover             | None                               |
+| nouveau logs    | Open-source NVIDIA driver init | Expected                           |
+
+These were intentionally left untouched for stability.
+
+---
+
+## Security & Stability Status
+
+* SSH: **Key-based only**
+* Brute-force protection: **Active**
+* Firewall: **Restrictive but functional**
+* UI/Display: **Preserved intentionally**
+* Reboot safety: **Verified**
+
+---
+
+## Outcome
+
+The system is now:
+
+* Secure against basic network attacks
+* Safe to run unattended
+* Stable across reboots
+* Ready for headless transition (later)
+* Prepared for remote-access architecture
+
+---
+
+## Next Steps (Day 6)
+
+* Design remote access from college network
+* Enable access when server has no direct internet
+* Implement relay-based or overlay network solution
+* Preserve LAN access without public exposure
+
+---
+
+**Status:** ✅ **Day 5 Complete**
