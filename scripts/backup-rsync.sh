@@ -1,10 +1,28 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 SRC="/srv/data/"
-DEST="/backup/daily/"
-LOG="/var/log/homelab-backup.log"
+DEST="/srv/data/backup/current"
+LOG="/srv/data/backup/backup-$(date +%F).log"
 
-echo "=== Backup started: $(date) ===" >> $LOG
-rsync -avh --delete "$SRC" "$DEST" >> $LOG 2>&1
-echo "=== Backup finished: $(date) ===" >> $LOG
+EXCLUDES=(
+  --exclude="/backup/"
+  --exclude="timeshift/"
+  --exclude="*/cache/*"
+  --exclude="*/tmp/*"
+  --exclude="lost+found"
+)
+
+echo "===== BACKUP START $(date) =====" | tee -a "$LOG"
+
+mkdir -p "$DEST"
+
+rsync -aAXH \
+  --numeric-ids \
+  --one-file-system \
+  --delete \
+  --info=progress2 \
+  "${EXCLUDES[@]}" \
+  "$SRC" "$DEST" | tee -a "$LOG"
+
+echo "===== BACKUP END $(date) =====" | tee -a "$LOG"

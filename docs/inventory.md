@@ -1,20 +1,16 @@
-# Hardware Inventory
+# Inventory
 
-## Server
-- Hostname:
-- Model:
-- CPU:
-- RAM:
+## Hardware
+- ThinkPad Edge (server)
+- Secondary HDD (data)
+- SSD (OS)
 
-## Storage
-- Disk layout:
-- Filesystems:
+## Software
+- Linux (Mint / Ubuntu base)
+- OpenSSH
+- Samba
+- NFS
+- Jellyfin (optional)
 
-## Network
-- Interfaces:
-- MAC addresses:
-
-## BIOS / Firmware
-- VT-x:
-- Wake-on-LAN:
-- GPU status:
+## External Dependencies
+- None required for LAN operation

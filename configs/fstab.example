@@ -1,0 +1,24 @@
+### 1️⃣ `configs/fstab.example`
+
+```fstab
+# Root filesystem
+UUID=<ROOT_UUID>  /           ext4  defaults,noatime  0  1
+
+# EFI
+UUID=<EFI_UUID>   /boot/efi   vfat  umask=0077        0  1
+
+# Data disk
+UUID=<DATA_UUID>  /srv/data   ext4  defaults,noatime  0  2
+
+# Backup bind mount (optional)
+/srv/data/backup  /backup     none  bind              0  0
+```
+
+**Notes**
+
+* This is **documentation**, not deployed directly
+* Prevents future fstab mistakes
+* UUIDs are intentionally placeholders
+
+---
+

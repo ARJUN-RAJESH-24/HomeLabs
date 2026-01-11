@@ -1,0 +1,34 @@
+### 5️⃣ `configs/tailscale-notes.txt`
+
+```text
+Tailscale Notes
+
+Purpose:
+- Emergency remote SSH
+- Optional subnet routing
+
+Not part of core stack.
+Must never block boot.
+Must be removable without breakage.
+
+When enabled:
+- SSH only
+- No exit node
+- LAN still primary
+```
+
+This prevents **future-you** from overengineering it.
+
+---
+
+## ✅ What configs are intentionally **NOT** here
+
+| Thing            | Reason              |
+| ---------------- | ------------------- |
+| `timeshift.json` | Generated, volatile |
+| Docker configs   | Not yet a phase     |
+| Systemd units    | Managed by OS       |
+| Secrets          | Never committed     |
+
+---
+

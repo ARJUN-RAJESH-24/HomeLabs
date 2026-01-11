@@ -1,7 +1,13 @@
-# Reboot Recovery Runbook
+# Reboot Recovery
 
-Steps to verify system health after reboot.
-uptime
-df -h
-free -h
-journalctl -p 3 -n 20
+1. Power on machine
+2. Verify mounts:
+   - /srv/data
+   - /backup
+3. Check services:
+   - ssh
+   - smbd
+   - nfs-server
+4. Verify disk health
+
+If SSH fails, connect locally.

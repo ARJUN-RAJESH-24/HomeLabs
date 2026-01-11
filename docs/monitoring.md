@@ -1,23 +1,20 @@
-# Monitoring Strategy
+# Backup Strategy
 
-## Disk Health
-- SMART checks
-- Failure thresholds
+## Layers
+1. rsync — data backups
+2. Timeshift — OS snapshots (limited scope)
 
-## Storage Usage
-- Capacity alerts
+## Data
+- `/srv/data` is backed up
+- Excludes caches, temp files
 
-## Services
-- SSH
-- Samba
-- NFS
-- Docker
+## Timeshift
+- rsync mode
+- Snapshot device: HDD
+- OS only (not data)
 
-## Future
-- Prometheus / node_exporter (optional)
-
-
-uptime
-df -h
-free -h
-journalctl -p 3 -n 20
+## Rule
+Backups must be:
+- restorable
+- explainable
+- deletable

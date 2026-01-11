@@ -1,0 +1,20 @@
+### 4️⃣ `configs/jellyfin-notes.txt`
+
+```text
+Jellyfin Notes
+
+Port: 8096/tcp
+Access: LAN only
+Data: /srv/data/media
+Config: /var/lib/jellyfin
+Cache: /var/cache/jellyfin
+
+Never back up cache.
+Never expose to WAN.
+Optional service.
+```
+
+Short, intentional, future-proof.
+
+---
+
