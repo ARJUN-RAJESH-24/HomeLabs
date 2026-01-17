@@ -1,0 +1,67 @@
+Upload a file → ThinkPad
+
+From arch-predator (client):
+
+scp file.txt arjun@thinkpad:/home/arjun/
+
+
+Upload a directory:
+
+scp -r myfolder arjun@thinkpad:/srv/data/
+
+Download a file ← ThinkPad
+scp arjun@thinkpad:/srv/data/file.txt .
+
+
+Download a directory:
+
+scp -r arjun@thinkpad:/srv/data/project .
+
+
+Method 2: Rsync (Best for large data & backups)
+
+This is the correct tool when:
+
+Files are large
+
+Transfers are repeated
+
+You want resume + progress
+
+Upload with progress
+rsync -avh --progress myfolder/ arjun@thinkpad:/srv/data/myfolder/
+
+Download with progress
+rsync -avh --progress arjun@thinkpad:/srv/data/myfolder/ ./myfolder/
+
+
+Method 3: Samba (Windows-style shared folder)
+
+You already set this up.
+
+On Linux
+ls /mnt
+sudo mount -t cifs //thinkpad/share /mnt/share -o username=arjun
+
+
+Or browse via file manager:
+
+smb://thinkpad
+
+On Windows / Android
+
+Open file manager
+
+Use:
+
+\\thinkpad
+
+
+Login with Samba credentials
+
+Good for:
+
+Drag & drop
+
+Media access
+
